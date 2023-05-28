@@ -15,6 +15,18 @@ def endpoint2(name: str):
     return data
 
 
+@app.put("/api/endpoint3")
+def endpoint3(name: str):
+    data = {'message': f'Hello, {name}!'}
+    return data
+
+
+@app.delete("/api/endpoint4")
+def endpoint4(name: str):
+    data = {'message': f'Hello, {name}!'}
+    return data
+
+
 if __name__ == '__main__':
     import uvicorn
 
