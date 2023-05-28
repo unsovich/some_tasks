@@ -15,7 +15,7 @@ class Hourly(Strategy):
         return total_cost
 
 
-class Lesson:
+class Lesson:  # не понял - какими связями нужно привязать уроки к стратегии?
     pass
 
 
