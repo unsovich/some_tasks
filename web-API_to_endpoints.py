@@ -1,6 +1,24 @@
 from fastapi import FastAPI
+from fastapi import APIRouter
 
 app = FastAPI()
+
+subapi = APIRouter()
+
+
+@subapi.get("/")
+def get_users():
+    return {"message": "Just main page"}
+
+
+@subapi.get("/users")
+def get_users():
+    return {"message": "Get users"}
+
+
+@subapi.post("/users")
+def create_user():
+    return {"message": "Create user"}
 
 
 @app.get("/api/endpoint1")
@@ -29,5 +47,7 @@ def endpoint4(name: str):
 
 if __name__ == '__main__':
     import uvicorn
+
+    app.include_router(subapi, prefix="/api")  # Подключаем суб-API к основному приложению FastAPI
 
     uvicorn.run(app, port=8002)
