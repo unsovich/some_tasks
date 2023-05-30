@@ -8,8 +8,7 @@ class HouseComponent(ABC):
         pass
 
 
-# Класс для дома
-class House(HouseComponent):
+class Guest(HouseComponent):
     def __init__(self):
         self.kitchen = None
 
@@ -17,12 +16,11 @@ class House(HouseComponent):
         self.kitchen = kitchen
 
     def prepare(self):
-        print("Preparing the house...")
+        print("Guest choose of kitchen...")
         if self.kitchen:
             self.kitchen.prepare()
 
 
-# Класс для кухни
 class Kitchen(HouseComponent):
     def __init__(self, chef, equipment):
         self.chef = chef
@@ -34,19 +32,16 @@ class Kitchen(HouseComponent):
         self.equipment.prepare()
 
 
-# Класс для повара
 class Chef(HouseComponent):
     def prepare(self):
         print("Preparing the chef...")
 
 
-# Класс для оборудования
 class Equipment(HouseComponent):
     def prepare(self):
         print("Preparing the equipment...")
 
 
-# Класс для блюда
 class Dish(HouseComponent):
     def __init__(self, name, kitchen):
         self.name = name
@@ -62,7 +57,6 @@ class Dish(HouseComponent):
             self.additional_dish.prepare()
 
 
-# Класс для меню
 class Menu(HouseComponent):
     def __init__(self, name):
         self.name = name
@@ -77,12 +71,11 @@ class Menu(HouseComponent):
             dish.prepare()
 
 
-# Создание объектов и построение иерархии
 italian_kitchen = Kitchen(chef=Chef(), equipment=Equipment())
 mexican_kitchen = Kitchen(chef=Chef(), equipment=Equipment())
 
-house = House()
-house.set_kitchen(italian_kitchen)
+Guest = Guest()
+Guest.set_kitchen(italian_kitchen)
 
 menu = Menu("Guest Menu")
 
@@ -92,5 +85,5 @@ pizza.add_additional_dish(additional_dish)
 
 menu.add_dish(pizza)
 
-house.prepare()
+Guest.prepare()
 menu.prepare()
