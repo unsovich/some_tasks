@@ -1,89 +1,118 @@
-from abc import ABC, abstractmethod
-
-
-# Абстрактный базовый класс для компонентов дома
-class HouseComponent(ABC):
-    @abstractmethod
-    def prepare(self):
-        pass
-
-
-class Guest(HouseComponent):
-    def __init__(self):
-        self.kitchen = None
-
-    def set_kitchen(self, kitchen):
-        self.kitchen = kitchen
-
-    def prepare(self):
-        print("Guest choose of kitchen...")
-        if self.kitchen:
-            self.kitchen.prepare()
-
-
-class Kitchen(HouseComponent):
-    def __init__(self, chef, equipment):
-        self.chef = chef
-        self.equipment = equipment
-
-    def prepare(self):
-        print("Preparing the kitchen...")
-        self.chef.prepare()
-        self.equipment.prepare()
-
-
-class Chef(HouseComponent):
-    def prepare(self):
-        print("Preparing the chef...")
-
-
-class Equipment(HouseComponent):
-    def prepare(self):
-        print("Preparing the equipment...")
-
-
-class Dish(HouseComponent):
-    def __init__(self, name, kitchen):
-        self.name = name
-        self.kitchen = kitchen
-        self.additional_dish = None
-
-    def add_additional_dish(self, additional_dish):
-        self.additional_dish = additional_dish
-
-    def prepare(self):
-        print(f"Preparing dish: {self.name} from {self.kitchen} kitchen...")
-        if self.additional_dish:
-            self.additional_dish.prepare()
-
-
-class Menu(HouseComponent):
+class Component:
     def __init__(self, name):
         self.name = name
-        self.dishes = []
 
-    def add_dish(self, dish):
-        self.dishes.append(dish)
-
-    def prepare(self):
-        print(f"Preparing menu: {self.name}")
-        for dish in self.dishes:
-            dish.prepare()
+    def display(self):
+        raise NotImplementedError()
 
 
-italian_kitchen = Kitchen(chef=Chef(), equipment=Equipment())
-mexican_kitchen = Kitchen(chef=Chef(), equipment=Equipment())
+class Home(Component):
+    def __init__(self, name):
+        super().__init__(name)
+        self.guest = None
+        self.kitchen = None
 
-Guest = Guest()
-Guest.set_kitchen(italian_kitchen)
+    def display(self):
+        print(f"Home: {self.name}")
 
-menu = Menu("Guest Menu")
 
-pizza = Dish("Pizza", "Italian")
-additional_dish = Dish("Additional Dish", "Italian")
-pizza.add_additional_dish(additional_dish)
+class Guest(Component):
+    def __init__(self, name):
+        super().__init__(name)
+        self.kitchen = None
+        self.main_dish = None
+        self.additional_dish = None
 
-menu.add_dish(pizza)
+    def display(self):
+        print(f"Guest: {self.name}")
 
-Guest.prepare()
-menu.prepare()
+    def choose_main_dish(self, dish):
+        self.main_dish = dish
+
+    def choose_additional_dish(self, dish):
+        self.additional_dish = dish
+
+
+class Kitchen(Component):
+    def __init__(self, name, cuisine):
+        super().__init__(name)
+        self.cuisine = cuisine
+
+    def display(self):
+        print(f"Kitchen: {self.name}")
+
+
+class Cuisine(Component):
+    def __init__(self, name):
+        super().__init__(name)
+        self.chef = None
+        self.equipment = None
+
+    def display(self):
+        print(f"Cuisine: {self.name}")
+
+
+class ItalianCuisine(Cuisine):
+    def __init__(self):
+        super().__init__("Italian")
+        self.chef = Chef("Italian Chef")
+        self.equipment = Equipment("Italian Equipment")
+
+    def prepare_dish(self, guest):
+        print(f"Italian Cuisine is preparing main dish: {guest.main_dish}")
+        if guest.additional_dish:
+            print(f"Italian Cuisine is preparing additional dish: {guest.additional_dish}")
+
+
+class MexicanCuisine(Cuisine):
+    def __init__(self):
+        super().__init__("Mexican")
+        self.chef = Chef("Mexican Chef")
+        self.equipment = Equipment("Mexican Equipment")
+
+    def prepare_dish(self, guest):
+        print(f"Mexican Cuisine is preparing main dish: {guest.main_dish}")
+        if guest.additional_dish:
+            print(f"Mexican Cuisine is preparing additional dish: {guest.additional_dish}")
+
+
+class Chef(Component):
+    def __init__(self, name):
+        super().__init__(name)
+
+    def display(self):
+        print(f"Chef: {self.name}")
+
+
+class Equipment(Component):
+    def __init__(self, name):
+        super().__init__(name)
+
+    def display(self):
+        print(f"Equipment: {self.name}")
+
+
+home = Home("My Home")
+guest = Guest("John")
+kitchen = Kitchen("Kitchen", None)
+italian_cuisine = ItalianCuisine()
+mexican_cuisine = MexicanCuisine()
+
+home.guest = guest
+home.kitchen = kitchen
+guest.kitchen = kitchen
+kitchen.cuisine = italian_cuisine
+
+guest.choose_main_dish("Pizza")
+guest.choose_additional_dish("Garlic Bread")
+
+# Приготовление блюд
+kitchen.cuisine.prepare_dish(guest)
+
+# Вывод информации
+home.display()
+guest.display()
+kitchen.display()
+kitchen.cuisine.display()
+kitchen.cuisine.chef.display()
+kitchen.cuisine.equipment.display()
