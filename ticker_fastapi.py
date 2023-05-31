@@ -7,7 +7,7 @@ app = FastAPI()
 
 async def ticker():
     while True:
-        print("Tick", datetime.datetime.now().strftime("%H:%M:%S"))
+        print("Tick", datetime.datetime.now().strftime("%H:%M:%S"))  # секунды
         await asyncio.sleep(1)
 
 
